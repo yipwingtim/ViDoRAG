@@ -1,17 +1,26 @@
 
 <!-- # <div align="center">ViDoRAG: Visual Document Retrieval-Augmented Generation via Dynamic Iterative Reasoning Agents<div> -->
-# <div align="center">ViDoRAG<div>
+<!-- # <div align="center">ViDoRAG<div>
 <div align="center">
 <strong>
 <h3>Visual Document Retrieval-Augmented Generation via Dynamic Iterative Reasoning Agents</h3>
 </strong>
-</div>
+</div> -->
+
+# ViDoRAG: Visual Document Retrieval-Augmented Generation via Dynamic Iterative Reasoning Agents
+
 
 <div align="center">
 <a href='https://huggingface.co/datasets/autumncc/ViDoSeek'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Datasets-green'></a>
 <a href='https://arxiv.org/abs/2502.18017'><img src='https://img.shields.io/badge/Paper-arXiv-red'></a>
 </div>
 
+<!-- <p align="center">•
+ <a href="#-Overview"> 🚀Overview </a> •
+ <a href="#-visrag-pipeline">✨ VisRAG Pipeline</a> •
+ <a href="#%EF%B8%8F-setup">⚙️ Setup</a> •
+ <a href="#%EF%B8%8F-training">⚡️ Training</a> 
+</p> -->
 
 <div align="center">
 <p align="center">
@@ -20,7 +29,7 @@
 </div>
 
 ## 📅 Changelog
-- Rest of the code will be released in March😊~
+- Rest of the code will be released in March~
 
 ## 🚀Overview
 - We introduce **ViDoSeek**, a benchmark specifically designed for visually rich document retrieval-reason-answer, fully suited for evaluation of RAG within large document corpus.
