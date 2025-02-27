@@ -32,24 +32,17 @@
 
 We release our ViDoSeek dataset which designed for visually rich document retrieval-reason-answer. In ViDoSeek, each query has a unique answer and specific reference pages.
 
-Each query is formatted as follows:
+The provided JSON structure includes a unique identifier (uid) to distinguish queries, the query content (query), a reference answer (reference_answer), and metadata (meta_info) containing the original file name (file_name), reference page numbers (reference_page), data source type (source_type), and query type (query_type):
 ```json
 {
     "uid": "04d8bb0db929110f204723c56e5386c1d8d21587_2",
-    // Unique identifier to distinguish different queries
     "query": "What is the temperature of Steam explosion of Pretreatment for Switchgrass and Sugarcane bagasse preparation?", 
-    // Query content
     "reference_answer": "195-205 Centigrade", 
-    // Reference answer to the query
     "meta_info": {
         "file_name": "Pretreatment_of_Switchgrass.pdf", 
-        // Original file name, typically a PDF file
         "reference_page": [10, 11], 
-        // Reference page numbers represented as an array
         "source_type": "Text", 
-        // Type of data source, 2d_layout\Text\Table\Chart
         "query_type": "Multi-Hop" 
-        // Query type, Multi-Hop or Single-Hop
     }
 }
 ```
