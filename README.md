@@ -28,8 +28,8 @@
 </p>
 </div>
 
-## 📅 Changelog
-- Rest of the code will be released in March~
+<!-- ## 📅 Changelog
+- Rest of the code will be released in March~ -->
 
 ## 🚀Overview
 - We introduce **ViDoSeek**, a benchmark specifically designed for visually rich document retrieval-reason-answer, fully suited for evaluation of RAG within large document corpus.
