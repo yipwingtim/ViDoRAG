@@ -28,8 +28,10 @@
 </p>
 </div>
 
-<!-- ## 📅 Changelog
-- Rest of the code will be released in March~ -->
+## 🔥 News
+- 🎉 We have released the generation and evaluation code, allowing you to customize your own evaluation pipeline.
+- 🎉 We have released code that unifies different embedding models, with which you can build your own retriever.
+- 🎉 We have released the ViDoSeek dataset, which is suitable for Retrieval-augmented Generation in the large visually rich document collection.
 
 ## 🚀Overview
 - We introduce **ViDoSeek**, a benchmark specifically designed for visually rich document retrieval-reason-answer, fully suited for evaluation of RAG within large document corpus.
