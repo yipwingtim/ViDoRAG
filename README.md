@@ -167,13 +167,10 @@ python eval.py \
 ## 📝 Citation
 
 ```bigquery
-@misc{wang2025vidoragvisualdocumentretrievalaugmented,
-      title={ViDoRAG: Visual Document Retrieval-Augmented Generation via Dynamic Iterative Reasoning Agents}, 
-      author={Qiuchen Wang and Ruixue Ding and Zehui Chen and Weiqi Wu and Shihang Wang and Pengjun Xie and Feng Zhao},
-      year={2025},
-      eprint={2502.18017},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2502.18017}, 
+@article{wang2025vidorag,
+  title={ViDoRAG: Visual Document Retrieval-Augmented Generation via Dynamic Iterative Reasoning Agents},
+  author={Wang, Qiuchen and Ding, Ruixue and Chen, Zehui and Wu, Weiqi and Wang, Shihang and Xie, Pengjun and Zhao, Feng},
+  journal={arXiv preprint arXiv:2502.18017},
+  year={2025}
 }
 ```
