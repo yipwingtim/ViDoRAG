@@ -29,8 +29,8 @@
 </div>
 
 ## 🔥 News
-- 🎉 We have released the generation and evaluation code, allowing you to customize your own evaluation pipeline.
-- 🎉 We have released code that unifies different embedding models, with which you can build your own retriever.
+- 🎉 We have released the evaluation code, allowing you to customize your own evaluation pipeline.
+- 🎉 Our framework integrates various embedding models, enabling you to create your own retriever.
 - 🎉 We have released the ViDoSeek dataset, which is suitable for Retrieval-augmented Generation in the large visually rich document collection.
 
 ## 🚀Overview
