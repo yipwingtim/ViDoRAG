@@ -12,7 +12,7 @@ from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core.schema import ImageNode
 from llama_index.core import SimpleDirectoryReader
 
-from llm.vl_embedding import VL_Embedding
+from llms.vl_embedding import VL_Embedding
 
 class Ingestion:
     def __init__(self, dataset_dir,input_prefix='ppocr',output_prefix='bge_ingestion',embed_model_name='BAAI/bge-m3'):
@@ -96,7 +96,7 @@ class Ingestion:
 
 if __name__ == '__main__':
     root_path = './data'
-    datasets = ['ViDoSeek', 'SlideVQA']
+    datasets = ['ExampleDataset', 'SlideVQA']
     for dataset in datasets:
         dataset_dir = os.path.join(root_path, dataset)
 
