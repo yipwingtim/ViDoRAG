@@ -57,7 +57,7 @@ The provided JSON structure includes a unique identifier (uid) to distinguish qu
     }
 }
 ```
-You can use Git LFS to download annotation files and original documents from Hugging Face or ModelScope. The organization of the files can refer to `./data/ExampleDataset`.
+You can use Git LFS to download annotation files and original documents from Hugging Face or ModelScope. The format of the files can refer to `./data/ExampleDataset`.
 
 Then, you can use the following script to convert the original file into images:
 ```python
