@@ -25,7 +25,7 @@ class Qwen_VL_2_5:
         self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
             model_name, torch_dtype="auto", device_map="auto",attn_implementation="flash_attention_2"
         )
-        self.processor = AutoProcessor.from_pretrained(model_name, revision="refs/pr/24")
+        self.processor = AutoProcessor.from_pretrained(model_name)
     
     def generate(self,query, images):
         if not isinstance(query, str):
@@ -108,5 +108,5 @@ class LLM:
 
 if __name__ == '__main__':
     llm = LLM('gpt-4o')
-    response = llm.generate(query='describe in 3 words',image=['/mnt/nas-alinlp/qiuchen.wqc/code/search_agent/data/SlideBench/img/00a76e3a9a36255616e2dc14a6eb5dde598b321f_1.jpg'])
+    response = llm.generate(query='describe in 3 words',image=['image_path'])
     print(response)

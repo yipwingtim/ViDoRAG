@@ -1,11 +1,15 @@
 dashscope
 tqdm
+datasets
+einops
 colpali-engine
 llama_index==0.12.0
+llama-index-embeddings-huggingface
+llama-index-embeddings-instructor
 scikit_learn==1.6.1
 seaborn==0.13.2
 tiktoken==0.8.0
 torch==2.5.1
 torchvision==0.20.1
-transformers==4.49.0.dev0
+transformers==4.47.1
 

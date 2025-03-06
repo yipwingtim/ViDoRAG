@@ -98,7 +98,7 @@ class SearchEngine:
             else:
                 self.vector_embed_model = VL_Embedding(model=embed_model_name, mode='text')
         else:
-            self.vector_embed_model = HuggingFaceEmbedding(model_name=self.embed_model_name, embed_batch_size=10, max_length=512, trust_remote_code=True, device='cuda:0')
+            self.vector_embed_model = HuggingFaceEmbedding(model_name=self.embed_model_name, embed_batch_size=10, max_length=512, trust_remote_code=True, device='cuda')
         self.recall_num = 100
         self.query_engine = self.load_query_engine()
         self.output_dir = os.path.join(self.dataset_dir, 'search_output')
@@ -385,9 +385,11 @@ class HybridSearchEngine:
 if __name__ == '__main__':
     datasets = ['ExampleDataset']
     for dataset in datasets:
-        search_engine = SearchEngine(dataset,node_dir_prefix='visrag_ingestion',embed_model_name='openbmb/VisRAG-Ret')
+        # search_engine = SearchEngine(dataset,node_dir_prefix='visrag_ingestion',embed_model_name='openbmb/VisRAG-Ret')
+        # search_engine = SearchEngine(dataset,node_dir_prefix='nv_ingestion',embed_model_name='nvidia/NV-Embed-v2')
+        search_engine = HybridSearchEngine(dataset,embed_model_name_vl = 'nvidia/NV-Embed-v2')
         search_engine.search('ok')
-        # import pdb;pdb.set_trace()
+        import pdb;pdb.set_trace()
     
 
     

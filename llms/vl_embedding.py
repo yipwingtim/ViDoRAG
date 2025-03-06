@@ -228,6 +228,6 @@ class VL_Embedding(MultiModalEmbedding):
 
 if __name__ == "__main__":
     colpali = VL_Embedding("vidore/colqwen2-v1.0")
-    image_embeddings = colpali.embed_img("/mnt/nas-alinlp/qiuchen.wqc/code/ViDoRAG/data/ExampleDataset/img/00a76e3a9a36255616e2dc14a6eb5dde598b321f_1.jpg")
+    image_embeddings = colpali.embed_img("./img/00a76e3a9a36255616e2dc14a6eb5dde598b321f_1.jpg")
     text_embeddings = colpali.embed_text("Hello, world!")
     score = colpali.processor.score_multi_vector(image_embeddings, text_embeddings)
