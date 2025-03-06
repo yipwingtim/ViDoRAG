@@ -221,7 +221,7 @@ class HybridSearchEngine:
                  dataset,
                  node_dir_prefix_vl = None,
                  node_dir_prefix_text = None,
-                 embed_model_name_vl = 'vidore/colqwen2-v0.1',
+                 embed_model_name_vl = 'vidore/colqwen2-v1.0',
                  embed_model_name_text = 'BAAI/bge-m3',
                  topk=10,
                  gmm=False):
@@ -387,7 +387,7 @@ if __name__ == '__main__':
     for dataset in datasets:
         # search_engine = SearchEngine(dataset,node_dir_prefix='visrag_ingestion',embed_model_name='openbmb/VisRAG-Ret')
         # search_engine = SearchEngine(dataset,node_dir_prefix='nv_ingestion',embed_model_name='nvidia/NV-Embed-v2')
-        search_engine = HybridSearchEngine(dataset,embed_model_name_vl = 'nvidia/NV-Embed-v2')
+        search_engine = HybridSearchEngine(dataset,gmm=True)
         search_engine.search('ok')
         import pdb;pdb.set_trace()
     
