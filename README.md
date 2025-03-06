@@ -94,6 +94,7 @@ cd ViDoRAG
 pip install -r requirements.txt
 ```
 We recommend following the guidance of the [Colpali-engine](https://github.com/illuin-tech/colpali) and the [Transformer](https://github.com/huggingface/transformers) library to install the most suitable version.
+> ⚠️ During our code review process, we discovered that the latest versions of Transformer, Llama Index, Copali Engine, and Qwen 2.5 are incompatible with each other. We recommend setting up separate environments for retriever and generation tasks. Detailed guidelines will be provided later.
 
 Below is a step-by-step guide to help you run the entire framework on your own dataset. You can also use individual modules independently:  
 
