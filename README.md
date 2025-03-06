@@ -93,6 +93,8 @@ cd ViDoRAG
 # Install requirements
 pip install -r requirements.txt
 ```
+We recommend following the guidance of the [Colpali-engine](https://github.com/illuin-tech/colpali) and the [Transformer](https://github.com/huggingface/transformers) library to install the most suitable version.
+
 Below is a step-by-step guide to help you run the entire framework on your own dataset. You can also use individual modules independently:  
 
 ### Step1. Bulid the Index Database
