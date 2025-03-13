@@ -121,14 +121,13 @@ class Inspector:
                         ref_images = [self.buffer_images[page] for page in ref]
                         return 'synthesizer', answer, ref_images
                 elif info is not None and choice is not None:
-                    if any([page >= len(self.buffer_images) for page in choice]) or len(choice)==0:
+                    if any([page >= len(self.buffer_images) for page in choice]):
                         raise Exception('choice error')
                     self.buffer_images = [self.buffer_images[page] for page in choice]
                     return 'seeker', info, self.buffer_images
             
             except Exception as e:
                 print(e)
-                print(answer_response)
                 print("inspector")
                 continue
 
