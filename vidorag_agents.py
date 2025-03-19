@@ -174,6 +174,9 @@ class ViDoRAG_Agents:
 
     def run_agent(self, query, images_path):
         # initial
+        self.seeker.buffer_images = None
+        self.inspector.buffer_images = []
+
         selected_images, summary, reason = self.seeker.run(query=query, images_path=images_path)
         # iter
         while True:
