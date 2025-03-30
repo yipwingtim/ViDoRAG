@@ -59,6 +59,11 @@ The provided JSON structure includes a unique identifier (uid) to distinguish qu
 ```
 You can use Git LFS to download annotation files and original documents from Hugging Face or ModelScope. The format of the files can refer to `./data/ExampleDataset`.
 
+### Download the dataset
+```bash
+bash scripts/ViDoSeek_down.sh
+```
+
 Then, you can use the following script to convert the original file into images:
 ```python
 python ./scripts/pdf2images.py
@@ -93,6 +98,13 @@ cd ViDoRAG
 # Install requirements
 pip install -r requirements.txt
 ```
+Or you can use `uv` to install the dependencies:
+```bash
+pip install uv
+uv venv -p 3.10
+uv sync
+```
+
 We recommend following the guidance of the [Colpali-engine](https://github.com/illuin-tech/colpali) and the [Transformer](https://github.com/huggingface/transformers) library to install the most suitable version.
 <!-- > ⚠️ During our code review process, we discovered that the latest versions of Transformer, Llama Index, Copali Engine, and Qwen 2.5 are incompatible with each other. We recommend setting up separate environments for retriever and generation tasks. Detailed guidelines will be provided later. -->
 

@@ -1,16 +1,20 @@
 import asyncio
 from typing import Any, List, Optional, Union
-import torch
-from PIL import Image
-from transformers import AutoModel, AutoTokenizer
-import torch.nn.functional as F
 
-from llama_index.core.embeddings import MultiModalEmbedding
+import torch
+import torch.nn.functional as F
+from colpali_engine.models import (
+    ColPali,
+    ColPaliProcessor,
+    ColQwen2,
+    ColQwen2Processor,
+)
+from llama_index.core.base.embeddings.base import Embedding
 from llama_index.core.bridge.pydantic import Field, PrivateAttr
 from llama_index.core.callbacks import CallbackManager
-from llama_index.core.base.embeddings.base import Embedding
-
-from colpali_engine.models import ColQwen2, ColQwen2Processor, ColPali, ColPaliProcessor
+from llama_index.core.embeddings import MultiModalEmbedding
+from PIL import Image
+from transformers import AutoModel, AutoTokenizer
 
 
 def weighted_mean_pooling(hidden, attention_mask):
@@ -20,8 +24,8 @@ def weighted_mean_pooling(hidden, attention_mask):
     reps = s / d
     return reps
 
-class VL_Embedding(MultiModalEmbedding):
 
+class VL_Embedding(MultiModalEmbedding):
     model: str = Field(description="The Multi-model to use.")
 
     api_key: Optional[str] = Field(
@@ -41,32 +45,25 @@ class VL_Embedding(MultiModalEmbedding):
     )
 
     mode: str = Field(
-        default='text',
-        description="The mode of the model, either 'text' or 'image'."
+        default="text",
+        description="The mode of the model, either 'text' or 'image'.",
     )
     show_progress: bool = Field(
         default=False,
         description="Whether to show progress bars.",
     )
-    
-    embed_model: Union[ColQwen2, AutoModel, None] = Field(
-        default=None
-    )
-    processor: Optional[ColQwen2Processor] = Field(
-        default=None
-    )
-    tokenizer: Optional[AutoTokenizer] = Field(
-        default=None
-    )
-    
-    
+
+    embed_model: Union[ColQwen2, AutoModel, None] = Field(default=None)
+    processor: Optional[ColQwen2Processor] = Field(default=None)
+    tokenizer: Optional[AutoTokenizer] = Field(default=None)
+
     def __init__(
         self,
         model: str = "vidore/colqwen2-v1.0",
         dimensions: Optional[int] = 1024,
         timeout: Optional[int] = None,
         callback_manager: Optional[CallbackManager] = None,
-        mode: str = 'text',
+        mode: str = "text",
         **kwargs: Any,
     ) -> None:
         super().__init__(
@@ -76,89 +73,106 @@ class VL_Embedding(MultiModalEmbedding):
             callback_manager=callback_manager,
             **kwargs,
         )
-        
+
         self.mode = mode
-        
-        if 'openbmb' in model:
-            self.tokenizer = AutoTokenizer.from_pretrained(model, trust_remote_code=True)
-            self.embed_model = AutoModel.from_pretrained(model,
-             torch_dtype=torch.bfloat16,
-            trust_remote_code=True,
-            device_map='cuda:1').cuda().eval()
+
+        if "openbmb" in model:
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                model, trust_remote_code=True
+            )
+            self.embed_model = (
+                AutoModel.from_pretrained(
+                    model,
+                    torch_dtype=torch.bfloat16,
+                    trust_remote_code=True,
+                    device_map="cuda:1",
+                )
+                .cuda()
+                .eval()
+            )
             # self.embed_model.eval()
-        elif 'vidore' in model and 'qwen' in model:
+        elif "vidore" in model and "qwen" in model:
             self.embed_model = ColQwen2.from_pretrained(
                 model,
                 torch_dtype=torch.bfloat16,
-                device_map='cuda',  # or "mps" if on Apple Silicon
+                device_map="cuda",  # or "mps" if on Apple Silicon
             ).eval()
             self.processor = ColQwen2Processor.from_pretrained(model)
-        elif 'vidore' in model and 'pali' in model:
+        elif "vidore" in model and "pali" in model:
             self.embed_model = ColPali.from_pretrained(
                 model,
                 torch_dtype=torch.bfloat16,
-                device_map='cuda',  # or "mps" if on Apple Silicon
+                device_map="cuda",  # or "mps" if on Apple Silicon
             ).eval()
             self.processor = ColPaliProcessor.from_pretrained(model)
-        
-        
-
 
     @classmethod
     def class_name(cls) -> str:
         return "VL_Embedding"
-    
+
     def embed_img(self, img_path):
         if isinstance(img_path, str):
             img_path = [img_path]
-        if 'vidore' in self.model:
+        if "vidore" in self.model:
             images = [Image.open(img) for img in img_path]
-            batch_images = self.processor.process_images(images).to(self.embed_model.device)
+            batch_images = self.processor.process_images(images).to(
+                self.embed_model.device
+            )
             with torch.no_grad():
                 image_embeddings = self.embed_model(**batch_images)
-        elif 'openbmb' in self.model:
-            images = [Image.open(img).convert('RGB') for img in img_path]
+        elif "openbmb" in self.model:
+            images = [Image.open(img).convert("RGB") for img in img_path]
             inputs = {
-                "text": [''] * len(images),
-                'image': images,
-                'tokenizer': self.tokenizer
+                "text": [""] * len(images),
+                "image": images,
+                "tokenizer": self.tokenizer,
             }
             with torch.no_grad():
                 outputs = self.embed_model(**inputs)
                 attention_mask = outputs.attention_mask
                 hidden = outputs.last_hidden_state
-                reps = weighted_mean_pooling(hidden, attention_mask)   
-                image_embeddings = F.normalize(reps, p=2, dim=1).detach().cpu().numpy()
+                reps = weighted_mean_pooling(hidden, attention_mask)
+                image_embeddings = (
+                    F.normalize(reps, p=2, dim=1).detach().cpu().numpy()
+                )
                 # image_embeddings = F.normalize(reps, p=2, dim=1).detach().cpu().tolist()[0]
             # image_embeddings = embeddings.tolist()[0]
         return image_embeddings
-    
+
     def embed_text(self, text):
         if isinstance(text, str):
             text = [text]
-        if 'colqwen' in self.model:
-            batch_queries = self.processor.process_queries(text).to(self.embed_model.device)
+        if "colqwen" in self.model:
+            batch_queries = self.processor.process_queries(text).to(
+                self.embed_model.device
+            )
             with torch.no_grad():
                 query_embeddings = self.embed_model(**batch_queries)
-        elif 'colpali' in self.model:
-            batch_queries = self.processor.process_queries(text).to(self.embed_model.device)
+        elif "colpali" in self.model:
+            batch_queries = self.processor.process_queries(text).to(
+                self.embed_model.device
+            )
             with torch.no_grad():
                 query_embeddings = self.embed_model(**batch_queries)
-        elif 'openbmb' in self.model:
-            INSTRUCTION = "Represent this query for retrieving relevant documents: "
+        elif "openbmb" in self.model:
+            INSTRUCTION = (
+                "Represent this query for retrieving relevant documents: "
+            )
             queries = [INSTRUCTION + query for query in text]
             inputs = {
                 "text": queries,
-                'image': [None] * len(queries),
-                'tokenizer': self.tokenizer
-                }
+                "image": [None] * len(queries),
+                "tokenizer": self.tokenizer,
+            }
             with torch.no_grad():
                 outputs = self.embed_model(**inputs)
                 attention_mask = outputs.attention_mask
                 hidden = outputs.last_hidden_state
-                reps = weighted_mean_pooling(hidden, attention_mask)   
+                reps = weighted_mean_pooling(hidden, attention_mask)
                 # query_embeddings = F.normalize(reps, p=2, dim=1).detach().cpu().numpy()
-                query_embeddings = F.normalize(reps, p=2, dim=1).detach().cpu().tolist()
+                query_embeddings = (
+                    F.normalize(reps, p=2, dim=1).detach().cpu().tolist()
+                )
                 # query_embeddings = embeddings.tolist()[0]
         return query_embeddings
 
@@ -182,32 +196,36 @@ class VL_Embedding(MultiModalEmbedding):
     def _aget_query_embedding(self, query: str) -> List[float]:
         """Get query embedding."""
         return self.embed_text(query)[0]
-    
+
     def _aget_text_embedding(self, text: str) -> List[float]:
         """Get text embedding."""
         return self.embed_text(text)[0]
-    
+
     def _get_image_embedding(self, img_file_path) -> Embedding:
         return self.embed_img(img_file_path)
-    
+
     def _aget_image_embedding(self, img_file_path) -> Embedding:
         return self.embed_img(img_file_path)
-    
+
     def __call__(self, nodes, **kwargs):
-        if 'vidore' in self.model:
-            if self.mode == 'image':
-                embeddings = self.embed_img([node.metadata['file_path'] for node in nodes])
-                embeddings = embeddings.view(embeddings.size(0),-1).tolist()
+        if "vidore" in self.model:
+            if self.mode == "image":
+                embeddings = self.embed_img(
+                    [node.metadata["file_path"] for node in nodes]
+                )
+                embeddings = embeddings.view(embeddings.size(0), -1).tolist()
             else:
                 embeddings = self.embed_text([node.text for node in nodes])
-                embeddings = embeddings.view(embeddings.size(0),-1).tolist()
+                embeddings = embeddings.view(embeddings.size(0), -1).tolist()
 
             for node, embedding in zip(nodes, embeddings):
                 node.embedding = embedding
-                
-        elif 'openbmb' in self.model:
-            if self.mode == 'image':
-                embeddings = self.embed_img([node.metadata['file_path'] for node in nodes])
+
+        elif "openbmb" in self.model:
+            if self.mode == "image":
+                embeddings = self.embed_img(
+                    [node.metadata["file_path"] for node in nodes]
+                )
                 embeddings = embeddings.tolist()
             else:
                 embeddings = self.embed_text([node.text for node in nodes])
@@ -216,18 +234,29 @@ class VL_Embedding(MultiModalEmbedding):
 
             for node, embedding in zip(nodes, embeddings):
                 node.embedding = embedding
-                
+
         return nodes
-    
-    def score(self,image_embeddings,text_embeddings):
-        if 'vidore' in self.model:
-            score = self.processor.score_multi_vector(image_embeddings, text_embeddings)
-        elif 'openbmb' in self.model:
+
+    def score(self, image_embeddings, text_embeddings):
+        if "vidore" in self.model:
+            score = self.processor.score_multi_vector(
+                image_embeddings, text_embeddings
+            )
+        elif "openbmb" in self.model:
             score = text_embeddings @ image_embeddings.T
         return score
 
+
 if __name__ == "__main__":
     colpali = VL_Embedding("vidore/colqwen2-v1.0")
-    image_embeddings = colpali.embed_img("./img/00a76e3a9a36255616e2dc14a6eb5dde598b321f_1.jpg")
+    image_embeddings = colpali.embed_img(
+        "./data/ExampleDataset/img/00a76e3a9a36255616e2dc14a6eb5dde598b321f_1.jpg"
+    )
     text_embeddings = colpali.embed_text("Hello, world!")
-    score = colpali.processor.score_multi_vector(image_embeddings, text_embeddings)
+    score = colpali.processor.score_multi_vector(
+        image_embeddings, text_embeddings
+    )
+    # check shapes
+    print(image_embeddings.shape)  # torch.Size([1, 779, 128])
+    print(text_embeddings.shape)  # torch.Size([1, 26, 128])
+    print(score)  # tensor([[115.5000]])
