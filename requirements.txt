@@ -6,7 +6,7 @@ colpali-engine
 scikit_learn==1.6.1
 seaborn==0.13.2
 tiktoken==0.8.0
-torch==2.5.1
+torch==2.7.0
 torchvision
 transformers>=4.49.0
 qwen-vl-utils
